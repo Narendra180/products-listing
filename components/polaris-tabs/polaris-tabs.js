@@ -4,7 +4,7 @@ import { tabs,filterProductsBasedOnTabsState } from './polaris-tabs.utils';
 import PolarisFiltersDataTable from "../polaris-filters-data-table/polaris-filters-data-table";
 import styles from './PolarisTabs.module.scss';
 
-function PolarisTabs({filtersState,filtersChange,productsArray, isProductsLoading}) {
+function PolarisTabs({filtersState,filtersChange,productsArray,isProductsLoading,handleDataTableRowClick}) {
     return (
         <Card>
             <Tabs tabs={tabs} selected={filtersState.selectedTabIndex} onSelect={filtersChange("selectedTabIndex")}>
@@ -13,6 +13,7 @@ function PolarisTabs({filtersState,filtersChange,productsArray, isProductsLoadin
                     filtersChange={filtersChange}
                     productsArray={productsArray}
                     isProductsLoading={isProductsLoading}
+                    handleDataTableRowClick={handleDataTableRowClick}
                 />
             </Tabs>
         </Card>

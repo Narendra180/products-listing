@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { calculateAndSetOptionsContainerPosition } from '../../utils/drop-down-utils';
+import { calculateAndSetOptionsContainerPosition } from './drop-down-utils';
 import styles from './CustomDropDown.module.scss';
 import {CaretDownMinor} from '@shopify/polaris-icons';
 
@@ -10,7 +10,7 @@ function CustomDropDown({btnContent,optionsArray,onChange}) {
 
     useEffect(() => {
         calculateAndSetOptionsContainerPosition(styles);        
-    },[]);
+    });
 
     const handleBtnClick = () => {
         setIsActive(!isActive);

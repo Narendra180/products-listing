@@ -74,6 +74,12 @@ function Home() {
 		console.log(filteredProductsArray);
 	}
 
+	const handleDataTableRowClick = (event) => {
+		// console.log(event);
+		const id = event.target.dataset.id;
+		
+	}
+
 	useEffect(() => {
 		getProducts();
 	}, []);
@@ -128,6 +134,7 @@ function Home() {
 						filtersChange={handleFiltersChange}
 						productsArray={state.filteredProductsArray}
 						isProductsLoading={state.isProductsLoading}
+						handleDataTableRowClick={handleDataTableRowClick}
 					/>
 				</div>
 			</div>

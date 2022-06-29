@@ -21,12 +21,15 @@ export function isEmpty(value) {
     }
 }
 
-export function getRowsFromArray(productObjectsArray) {
+export function getRowsFromArray(productObjectsArray, handleDataTableRowClick) {
     return productObjectsArray.map(productObject => {
-        const {image,title,status,inventory,type,vendor} = productObject;
+        const {image,title,status,inventory,type,vendor,id} = productObject;
         const imgElement = React.createElement("img",{src: image,alt: title, className: "data-table-product-img"},null);
         const shortenedTitle = title.slice(0,10)+'...';
-        return [imgElement,shortenedTitle,status,inventory,type,vendor];
+        const statusSpan = React.createElement("span",{className: "status-span"}, status);
+        const inventorySpan = React.createElement("span",{className: `inventory-span ${inventory[0]==="-"?"negative":""}`}, inventory);
+        const clickableRowOverlay = React.createElement("div",{className: "clickable-row-overlay", "data-id": id, onClick: handleDataTableRowClick},null);
+        return [imgElement,shortenedTitle,statusSpan,inventorySpan,type,vendor,clickableRowOverlay];
     });
 }
 

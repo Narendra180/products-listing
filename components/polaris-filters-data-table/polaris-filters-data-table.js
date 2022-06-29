@@ -3,7 +3,7 @@ import { ChoiceList, Card, Filters, DataTable, Spinner, EmptySearchResult } from
 import { isEmpty, disambiguateLabel, getRowsFromArray } from "./polaris-filters-data-table.utils";
 import styles from './PolarisFiltersDataTable.module.scss';
 
-function PolarisFiltersDataTable({ productsArray, filtersState, filtersChange, isProductsLoading }) {
+function PolarisFiltersDataTable({ productsArray, filtersState, filtersChange, isProductsLoading, handleDataTableRowClick }) {
     const { availability, productType, vendor, queryValue } = filtersState;
 
     const handleAvailabilityRemove = () => filtersChange("availability", { value: null });
@@ -153,6 +153,7 @@ function PolarisFiltersDataTable({ productsArray, filtersState, filtersChange, i
                                         "text",
                                         "text",
                                         "text",
+                                        "text",
                                         "text"
                                     ]}
                                     headings={[
@@ -162,8 +163,9 @@ function PolarisFiltersDataTable({ productsArray, filtersState, filtersChange, i
                                         "Inventory",
                                         "Type",
                                         "Vendor",
+                                        ""
                                     ]}
-                                    rows={getRowsFromArray(productsArray)}
+                                    rows={getRowsFromArray(productsArray, handleDataTableRowClick)}
                                 />
                         )
                         

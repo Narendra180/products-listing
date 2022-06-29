@@ -1,0 +1,49 @@
+.data-table-container {
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 400px;
+    
+        svg {
+            width: 50px;
+            height: 50px;
+        }
+    
+        p {
+            margin-top: 25px;
+            font-size: 1.7rem;
+        }
+    }
+    
+    .empty-search-result-container {
+        padding: 40px;    
+    }
+
+    :global .data-table-product-img {
+        width: 20px;
+        height: 30px;
+    }
+
+    :global {
+        .Polaris-DataTable {
+            padding: 0 13px;
+
+            .Polaris-DataTable__Table {
+                thead th {
+                    font-weight: 600;
+                }
+
+                tbody tr {
+                    td:nth-child(1) {
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+        .Polaris-DataTable__Cell--verticalAlignTop {
+            vertical-align: middle;
+        }
+    } 
+}

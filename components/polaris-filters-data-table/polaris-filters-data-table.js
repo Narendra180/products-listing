@@ -1,37 +1,16 @@
-import { useState, useCallback, useEffect } from "react";
-import { ChoiceList, TextField, Card, Filters, DataTable, } from "@shopify/polaris";
-import { isEmpty,disambiguateLabel } from "./polaris-filters-data-table.utils";
+import { useCallback } from "react";
+import { ChoiceList, Card, Filters, DataTable, Spinner, EmptySearchResult } from "@shopify/polaris";
+import { isEmpty, disambiguateLabel, getRowsFromArray } from "./polaris-filters-data-table.utils";
 import styles from './PolarisFiltersDataTable.module.scss';
 
-function PolarisFiltersDataTable({productsArray}) {
-    const [availability, setAvailability] = useState(null);
-    const [productType, setProductType] = useState(null);
-    const [vendor, setVendor] = useState(null);
-    const [queryValue, setQueryValue] = useState('');
+function PolarisFiltersDataTable({ productsArray, filtersState, filtersChange, isProductsLoading }) {
+    const { availability, productType, vendor, queryValue } = filtersState;
 
-    const handleAvailabilityChange = useCallback(
-        (value) => setAvailability(value),
-        []
-    );
-    const handleProductTypeChange = useCallback(
-        (value) => setProductType(value),
-        []
-    );
-    const handleVendorChange = useCallback(
-        (value) => setVendor(value),
-        []
-    );
-    const handleFiltersQueryChange = useCallback(
-        (value) => {
-            console.log(value);
-            setQueryValue(value)
-        },
-        []
-    );
-    const handleAvailabilityRemove = useCallback(() => setAvailability(null), []);
-    const handleProductTypeRemove = useCallback(() => setProductType(null), []);
-    const handleVendorRemove = useCallback(() => setVendor(null), []);
-    const handleQueryValueRemove = useCallback(() => setQueryValue(''), []);
+    const handleAvailabilityRemove = () => filtersChange("availability", { value: null });
+    const handleProductTypeRemove = () => filtersChange("productType", { value: null });
+    const handleVendorRemove = () => filtersChange("vendor", { value: null });
+    const handleQueryValueRemove = () => filtersChange("queryValue", { value: '' });
+
     const handleFiltersClearAll = useCallback(() => {
         handleAvailabilityRemove();
         handleProductTypeRemove();
@@ -58,7 +37,7 @@ function PolarisFiltersDataTable({productsArray}) {
                         { label: "Buy Button", value: "Buy Button" },
                     ]}
                     selected={availability || []}
-                    onChange={handleAvailabilityChange}
+                    onChange={filtersChange("availability")}
                     allowMultiple
                 />
             ),
@@ -77,7 +56,7 @@ function PolarisFiltersDataTable({productsArray}) {
                         { label: "Gift card", value: "Gift card" },
                     ]}
                     selected={productType || []}
-                    onChange={handleProductTypeChange}
+                    onChange={filtersChange("productType")}
                     allowMultiple
                 />
             ),
@@ -97,7 +76,7 @@ function PolarisFiltersDataTable({productsArray}) {
                         { label: "partners-demo", value: "partners-demo" },
                     ]}
                     selected={vendor || []}
-                    onChange={handleVendorChange}
+                    onChange={filtersChange("vendor")}
                     allowMultiple
                 />
             ),
@@ -131,8 +110,9 @@ function PolarisFiltersDataTable({productsArray}) {
     }
 
     return (
-        <div 
-            // style={{ height: "568px" }}
+        <div
+        // style={{ height: "568px" }}
+            className={styles['data-table-container']}
         >
             <Card>
                 <Card.Section>
@@ -141,31 +121,53 @@ function PolarisFiltersDataTable({productsArray}) {
                         queryValue={queryValue}
                         filters={filters}
                         appliedFilters={appliedFilters}
-                        onQueryChange={handleFiltersQueryChange}
+                        onQueryChange={filtersChange("queryValue")}
                         onQueryClear={handleQueryValueRemove}
                         onClearAll={handleFiltersClearAll}
                     />
                 </Card.Section>
-                <DataTable
-                    columnContentTypes={[
-                        "text",
-                        "text",
-                        "text",
-                        "text",
-                        "text",
-                        "text"
-                    ]}
-                    headings={[
-                        "",
-                        "Product",
-                        "Status",
-                        "Inventory",
-                        "Type",
-                        "Vendor",
-                    ]}
-                    rows={productsArray}
-                    // totals={["", "", "", 255, "$155,830.00"]}
-                />
+                {
+                    isProductsLoading
+                        ?
+                        <div className={styles['spinner-container']}>
+                            <Spinner />
+                            <p>Loading...</p>
+                        </div>
+                        :
+                        (
+                            productsArray.length === 0
+                                ?
+                                <div className={styles['empty-search-result-container']}>
+                                    <EmptySearchResult
+                                        className="Hello" 
+                                        title={"No Products Found"}
+                                        description={"Try changing the filters or search term"}
+                                        withIllustration
+                                    />
+                                </div>                               
+                                :
+                                <DataTable
+                                    columnContentTypes={[
+                                        "text",
+                                        "text",
+                                        "text",
+                                        "text",
+                                        "text",
+                                        "text"
+                                    ]}
+                                    headings={[
+                                        "",
+                                        "Product",
+                                        "Status",
+                                        "Inventory",
+                                        "Type",
+                                        "Vendor",
+                                    ]}
+                                    rows={getRowsFromArray(productsArray)}
+                                />
+                        )
+                        
+                }
             </Card>
         </div>
     );

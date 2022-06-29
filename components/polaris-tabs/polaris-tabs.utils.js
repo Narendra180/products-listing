@@ -22,18 +22,21 @@ export const tabs = [
     },
 ];
 
-
-export const filterProductsBasedOnTabsState = (tabIndex, productsArray) => {
-    switch(tabs[tabIndex].content) {
-        case "All":
-            return productsArray;
-        case "Active":
-            return productsArray.filter(product => product[2] === "Active");
-        case "Draft":
-            return productsArray.filter(product => product[2] === "Draft");
-        case "Archived":
-            return productsArray.filter(product => product[2] === "Archived");
-        default: 
-    }
-    return [];
+export const getTabValue = (tabIndex) => {
+    return tabs[tabIndex].content;
 }
+
+// export const filterProductsBasedOnTabsState = (tabIndex, productsArray) => {
+//     switch(tabs[tabIndex].content) {
+//         case "All":
+//             return productsArray;
+//         case "Active":
+//             return productsArray.filter(product => product[2] === "Active");
+//         case "Draft":
+//             return productsArray.filter(product => product[2] === "Draft");
+//         case "Archived":
+//             return productsArray.filter(product => product[2] === "Archived");
+//         default: 
+//     }
+//     return [];
+// }

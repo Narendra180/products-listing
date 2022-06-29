@@ -4,31 +4,74 @@ import CustomDropDown from '../components/custom-drop-down/custom-drop-down';
 import PolarisTabs from '../components/polaris-tabs/polaris-tabs';
 import { optionsArray } from '../components/custom-drop-down/options-data';
 import { Button } from "@shopify/polaris";
-import { getProductsArrayInRequiredFormat } from '../utils/home.utils';
-import { filterProductsBasedOnTabsState } from '../components/polaris-tabs/polaris-tabs.utils';
+import { getAdditionalData, getFilteredProductsArray } from '../utils/home.utils';
 import styles from '../styles/Home.module.scss';
 
 function Home() {
 	const [state,setState] = useState({
 		productsArrayFromApi: [],
-		selectedTabIndex: 0,
+		isProductsLoading: true,
+		errorMessage: "",
 		filteredProductsArray: []
 	});
 
+	const [filtersState,setFiltersState] = useState({
+		selectedTabIndex: 0,
+		availability: null,
+		productType: null,
+		vendor: null,
+		queryValue: ""
+	});
+
 	const getProducts = async () => {
-		const response = await fetch("https://fakestoreapi.com/products");
-		let products = await response.json();
-		products = getProductsArrayInRequiredFormat(products);
-		setState((prevState) => {
-			return {...prevState, productsArrayFromApi: products, filteredProductsArray: [...products]}
-		});
+		try {
+			// const response = await fetch("https://fakestoreapi.com/products");
+			const response = await fetch("http://localhost:5000/");
+			let products = await response.json();
+			// products = getProductsArrayInRequiredFormat(products);
+			products = getAdditionalData(products);
+			console.log(products)
+			setState((prevState) => {
+				return {
+					...prevState, 
+					productsArrayFromApi: products, 
+					filteredProductsArray: [...products],
+					isProductsLoading: false,
+					errorMessage: ""
+				}
+			});
+		} catch(err) {
+			console.log(err);
+			setState((prevState) => {
+				return {
+					...prevState, 
+					isProductsLoading: false,
+					errorMessage: "Something Went Wrong, Please Try Again Later."
+				}
+			});
+			setTimeout(() => getProducts(), 5000);
+		}
+		
 	}
 
-	const handleTabChange = (selectedTabIndex) => {
-		const filteredProductsArray = filterProductsBasedOnTabsState(selectedTabIndex,state.productsArrayFromApi);
-		setState((prevState) => {
-			return {...prevState, selectedTabIndex, filteredProductsArray}
-		});
+	const handleFiltersChange = (name,remove) => {
+		if(remove) {
+			setFiltersState((prevState) => {
+				return {...prevState,[name]: remove.value}
+			});
+			return;
+		}
+		return (value) => {
+			setFiltersState((prevState) => {
+				return {...prevState,[name]: value}
+			});
+		}
+	}
+
+	const updateFilteredProducts = () => {
+		const filteredProductsArray = getFilteredProductsArray(state.productsArrayFromApi,filtersState);
+		setState({...state,filteredProductsArray});
+		console.log(filteredProductsArray);
 	}
 
 	useEffect(() => {
@@ -37,8 +80,11 @@ function Home() {
 	
 
 	useEffect(() => {
-		console.log(state)
-	});
+		if(state.productsArrayFromApi.length > 0) {
+			updateFilteredProducts();
+		}
+		console.log(filtersState);
+	},[filtersState]);
 	
 
 	return (
@@ -76,15 +122,15 @@ function Home() {
 					</ul>
 				</div>
 
-				<div className='products-table-container'>
+				<div className={styles['products-table-container']}>
 					<PolarisTabs 
-						selectedTabIndex={state.selectedTabIndex}
-						onSelect={handleTabChange}
+						filtersState={filtersState}
+						filtersChange={handleFiltersChange}
 						productsArray={state.filteredProductsArray}
+						isProductsLoading={state.isProductsLoading}
 					/>
 				</div>
 			</div>
-			
 		</div>
 	)
 }

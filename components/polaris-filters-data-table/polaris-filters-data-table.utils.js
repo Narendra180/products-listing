@@ -1,3 +1,5 @@
+import React from 'react';
+
 export function disambiguateLabel(key, value) {
     switch (key) {
         case "vendor":
@@ -17,5 +19,14 @@ export function isEmpty(value) {
     } else {
         return value === "" || value == null;
     }
+}
+
+export function getRowsFromArray(productObjectsArray) {
+    return productObjectsArray.map(productObject => {
+        const {image,title,status,inventory,type,vendor} = productObject;
+        const imgElement = React.createElement("img",{src: image,alt: title, className: "data-table-product-img"},null);
+        const shortenedTitle = title.slice(0,10)+'...';
+        return [imgElement,shortenedTitle,status,inventory,type,vendor];
+    });
 }
 

@@ -1,0 +1,51 @@
+.product-description-modal-container {
+    padding: 30px 40px 30px 40px;
+    
+    :global {
+        .image-container {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 40px;
+            border-bottom: 2px solid rgb(123, 123, 123);
+            img {
+                width: 250px;
+                height: 250px;
+                object-fit: contain;
+            }
+        }
+
+        .description-container {
+            padding: 30px;
+            border-bottom: 2px solid rgb(123, 123, 123);
+            h2 {
+                font-size: 1.5rem;
+                line-height: 1.5;
+                margin-bottom: 10px;
+            }
+            p {
+                font-size: 1rem;
+                line-height: 1.5;
+                color: rgb(120, 120, 120);
+            }
+        }
+
+        .rating-container {
+            padding: 30px;
+            font-size: 1rem;
+            dt,dd {
+                display: inline-block;
+            }
+            dt {
+                font-weight: 600;
+            }
+            dd {
+                margin-left: 10px;
+            }
+            h2 {
+                font-size: 1.5rem;
+                line-height: 1.5;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

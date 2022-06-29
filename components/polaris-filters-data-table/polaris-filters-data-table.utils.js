@@ -21,6 +21,18 @@ export function isEmpty(value) {
     }
 }
 
+const getDataAttributes = (obj) => {
+    const resObject = {};
+    Object.keys(obj).forEach(key => {
+        if(key === 'rating') {
+            Object.keys(obj['rating']).forEach(key => resObject[`data-rating_${key}`] = obj['rating'][key]);
+        } else {
+            resObject[`data-${key}`] = obj[key];
+        }
+    });
+    return resObject;
+}
+
 export function getRowsFromArray(productObjectsArray, handleDataTableRowClick) {
     return productObjectsArray.map(productObject => {
         const {image,title,status,inventory,type,vendor,id} = productObject;
@@ -28,7 +40,7 @@ export function getRowsFromArray(productObjectsArray, handleDataTableRowClick) {
         const shortenedTitle = title.slice(0,10)+'...';
         const statusSpan = React.createElement("span",{className: "status-span"}, status);
         const inventorySpan = React.createElement("span",{className: `inventory-span ${inventory[0]==="-"?"negative":""}`}, inventory);
-        const clickableRowOverlay = React.createElement("div",{className: "clickable-row-overlay", "data-id": id, onClick: handleDataTableRowClick},null);
+        const clickableRowOverlay = React.createElement("div",{className: "clickable-row-overlay", ...getDataAttributes(productObject), onClick: handleDataTableRowClick},null);
         return [imgElement,shortenedTitle,statusSpan,inventorySpan,type,vendor,clickableRowOverlay];
     });
 }

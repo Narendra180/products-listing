@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import CustomDropDown from '../components/custom-drop-down/custom-drop-down';
+import ProductDescriptionModal from '../components/product-description-modal/product-description-modal';
 import PolarisTabs from '../components/polaris-tabs/polaris-tabs';
 import { optionsArray } from '../components/custom-drop-down/options-data';
 import { Button } from "@shopify/polaris";
@@ -22,6 +23,7 @@ function Home() {
 		vendor: null,
 		queryValue: ""
 	});
+
 
 	const getProducts = async () => {
 		try {
@@ -74,12 +76,6 @@ function Home() {
 		console.log(filteredProductsArray);
 	}
 
-	const handleDataTableRowClick = (event) => {
-		// console.log(event);
-		const id = event.target.dataset.id;
-		
-	}
-
 	useEffect(() => {
 		getProducts();
 	}, []);
@@ -91,7 +87,32 @@ function Home() {
 		}
 		console.log(filtersState);
 	},[filtersState]);
+
+	const [productDescriptionModalState,setProductDescriptionModalState] = useState(
+		{
+			open: false,
+			data: null
+		}
+	)
+
+	const handleProductDescriptionModalClose = () => {
+		setProductDescriptionModalState(
+			{
+				...productDescriptionModalState,
+				open: false,
+				data: null
+			}
+		);
+	}
 	
+	
+	const handleDataTableRowClick = (event) => {
+		const data = event.target.dataset;
+		console.log(data,"kkkkkkkkkkkkkkkkkk")
+		setProductDescriptionModalState({
+			...productDescriptionModalState,data, open: true
+		});
+	}
 
 	return (
 		<div className={styles["home-container"]}>
@@ -137,6 +158,12 @@ function Home() {
 						handleDataTableRowClick={handleDataTableRowClick}
 					/>
 				</div>
+				
+				<ProductDescriptionModal
+					open={productDescriptionModalState.open}
+					data={productDescriptionModalState.data}
+					onClose={handleProductDescriptionModalClose}
+				/>
 			</div>
 		</div>
 	)

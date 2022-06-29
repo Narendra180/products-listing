@@ -185,36 +185,7 @@ export const getFilteredProductsArray = (productsArray, filtersState) => {
                                     title.toLowerCase().includes(queryValue.toLowerCase())
                                     :true
                                 );
-        // console.log(selectedTabIndexCheck,vendorCheck,queryValueCheck)
         return (selectedTabIndexCheck) && (vendorCheck) && (queryValueCheck);
-        // console.log(selectedTabIndexCheck)
-        // return selectedTabIndexCheck;
-        // return true;
     });
 }
 
-// export const getProductsArrayInRequiredFormat = (products) => {
-//     return products.map((productObject,i) => {
-//         const {image,title,status,inventory,type,vendor} = {...productObject,...additionalProductsData[i]};
-//         const imgElement = React.createElement("img",{src: image,alt: title, className: "data-table-product-img"},null);
-//         const shortenedTitle = title.slice(0,10)+'...';
-//        return [imgElement,shortenedTitle,status,inventory,type,vendor];
-//     });
-// }
-
-// export const getFilteredProductsArray = (productsArray, filtersState) => {
-//     // console.log(filtersState)
-//     // console.log(getTabValue(filtersState.selectedTabIndex))
-//     const { selectedTabIndex, availability, productType, vendor, queryValue } = filtersState;
-//     const selectedTabIndexValue = getTabValue(selectedTabIndex);
-//     return productsArray.filter(product => {
-//         const selectedTabIndexCheck = (selectedTabIndexValue === "All"? true: (product[2] === selectedTabIndexValue));
-//         const availabilityCheck = '';
-//         const productTypeCheck = '';
-//         const vendorCheck = ((vendor&&vendor.length)?vendor.includes(product[5]):true);
-//         const queryValueCheck = (queryValue?product[1].toLowerCase().includes(queryValue.toLowerCase()):true);
-//         console.log(selectedTabIndexCheck,vendorCheck,queryValueCheck)
-//         return (selectedTabIndexCheck) && (vendorCheck) && (queryValueCheck);
-//         // return true;
-//     });
-// }

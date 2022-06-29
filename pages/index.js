@@ -27,12 +27,9 @@ function Home() {
 
 	const getProducts = async () => {
 		try {
-			// const response = await fetch("https://fakestoreapi.com/products");
-			const response = await fetch("http://localhost:5000/");
+			const response = await fetch("https://fakestoreapi.com/products");
 			let products = await response.json();
-			// products = getProductsArrayInRequiredFormat(products);
 			products = getAdditionalData(products);
-			console.log(products)
 			setState((prevState) => {
 				return {
 					...prevState, 
@@ -73,7 +70,6 @@ function Home() {
 	const updateFilteredProducts = () => {
 		const filteredProductsArray = getFilteredProductsArray(state.productsArrayFromApi,filtersState);
 		setState({...state,filteredProductsArray});
-		console.log(filteredProductsArray);
 	}
 
 	useEffect(() => {
@@ -85,7 +81,6 @@ function Home() {
 		if(state.productsArrayFromApi.length > 0) {
 			updateFilteredProducts();
 		}
-		console.log(filtersState);
 	},[filtersState]);
 
 	const [productDescriptionModalState,setProductDescriptionModalState] = useState(
@@ -108,7 +103,6 @@ function Home() {
 	
 	const handleDataTableRowClick = (event) => {
 		const data = event.target.dataset;
-		console.log(data,"kkkkkkkkkkkkkkkkkk")
 		setProductDescriptionModalState({
 			...productDescriptionModalState,data, open: true
 		});

@@ -31,7 +31,7 @@ function ProductDescriptionModal({onClose,data,open}) {
                                     </div>
                                     <div>
                                         <dt>Rated By:</dt>
-                                        <dd>{data["rating_count"]}</dd>
+                                        <dd>{data["rating_count"]} Customers</dd>
                                     </div>                                    
                                 </dl>
                             </div>

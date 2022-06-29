@@ -1,12 +1,13 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ChoiceList, TextField, Card, Filters, DataTable, } from "@shopify/polaris";
+import { isEmpty,disambiguateLabel } from "./polaris-filters-data-table.utils";
 import styles from './PolarisFiltersDataTable.module.scss';
 
-function PolarisFiltersDataTable() {
+function PolarisFiltersDataTable({productsArray}) {
     const [availability, setAvailability] = useState(null);
     const [productType, setProductType] = useState(null);
-    const [taggedWith, setTaggedWith] = useState(null);
-    const [queryValue, setQueryValue] = useState(null);
+    const [vendor, setVendor] = useState(null);
+    const [queryValue, setQueryValue] = useState('');
 
     const handleAvailabilityChange = useCallback(
         (value) => setAvailability(value),
@@ -16,34 +17,37 @@ function PolarisFiltersDataTable() {
         (value) => setProductType(value),
         []
     );
-    const handleTaggedWithChange = useCallback(
-        (value) => setTaggedWith(value),
+    const handleVendorChange = useCallback(
+        (value) => setVendor(value),
         []
     );
     const handleFiltersQueryChange = useCallback(
-        (value) => setQueryValue(value),
+        (value) => {
+            console.log(value);
+            setQueryValue(value)
+        },
         []
     );
     const handleAvailabilityRemove = useCallback(() => setAvailability(null), []);
     const handleProductTypeRemove = useCallback(() => setProductType(null), []);
-    const handleTaggedWithRemove = useCallback(() => setTaggedWith(null), []);
-    const handleQueryValueRemove = useCallback(() => setQueryValue(null), []);
+    const handleVendorRemove = useCallback(() => setVendor(null), []);
+    const handleQueryValueRemove = useCallback(() => setQueryValue(''), []);
     const handleFiltersClearAll = useCallback(() => {
         handleAvailabilityRemove();
         handleProductTypeRemove();
-        handleTaggedWithRemove();
+        handleVendorRemove();
         handleQueryValueRemove();
     }, [
         handleAvailabilityRemove,
         handleQueryValueRemove,
         handleProductTypeRemove,
-        handleTaggedWithRemove,
+        handleVendorRemove,
     ]);
 
     const filters = [
         {
             key: "availability",
-            label: "Availability",
+            label: "Purchase Availability",
             filter: (
                 <ChoiceList
                     title="Availability"
@@ -80,15 +84,21 @@ function PolarisFiltersDataTable() {
             shortcut: true,
         },
         {
-            key: "taggedWith",
-            label: "Tagged with",
+            key: "vendor",
+            label: "Vendor",
             filter: (
-                <TextField
-                    label="Tagged with"
-                    value={taggedWith}
-                    onChange={handleTaggedWithChange}
-                    autoComplete="off"
-                    labelHidden
+                <ChoiceList
+                    title="Vendor"
+                    titleHidden
+                    choices={[
+                        { label: "Company 123", value: "Company 123" },
+                        { label: "Boring Rock", value: "Boring Rock" },
+                        { label: "Rustic LTD", value: "Rustic LTD" },
+                        { label: "partners-demo", value: "partners-demo" },
+                    ]}
+                    selected={vendor || []}
+                    onChange={handleVendorChange}
+                    allowMultiple
                 />
             ),
         },
@@ -111,12 +121,12 @@ function PolarisFiltersDataTable() {
             onRemove: handleProductTypeRemove,
         });
     }
-    if (!isEmpty(taggedWith)) {
-        const key = "taggedWith";
+    if (!isEmpty(vendor)) {
+        const key = "vendor";
         appliedFilters.push({
             key,
-            label: disambiguateLabel(key, taggedWith),
-            onRemove: handleTaggedWithRemove,
+            label: disambiguateLabel(key, vendor),
+            onRemove: handleVendorRemove,
         });
     }
 
@@ -127,6 +137,7 @@ function PolarisFiltersDataTable() {
             <Card>
                 <Card.Section>
                     <Filters
+                        instanceId="PolarisTextField1Label"
                         queryValue={queryValue}
                         filters={filters}
                         appliedFilters={appliedFilters}
@@ -138,55 +149,26 @@ function PolarisFiltersDataTable() {
                 <DataTable
                     columnContentTypes={[
                         "text",
-                        "numeric",
-                        "numeric",
-                        "numeric",
-                        "numeric",
+                        "text",
+                        "text",
+                        "text",
+                        "text",
+                        "text"
                     ]}
                     headings={[
+                        "",
                         "Product",
-                        "Price",
-                        "SKU Number",
-                        "Net quantity",
-                        "Net sales",
+                        "Status",
+                        "Inventory",
+                        "Type",
+                        "Vendor",
                     ]}
-                    rows={[
-                        ["Emerald Silk Gown", "$875.00", 124689, 140, "$122,500.00"],
-                        ["Mauve Cashmere Scarf", "$230.00", 124533, 83, "$19,090.00"],
-                        [
-                            "Navy Merino Wool Blazer with khaki chinos and yellow belt",
-                            "$445.00",
-                            124518,
-                            32,
-                            "$14,240.00",
-                        ],
-                    ]}
+                    rows={productsArray}
                     // totals={["", "", "", 255, "$155,830.00"]}
                 />
             </Card>
         </div>
     );
-
-    function disambiguateLabel(key, value) {
-        switch (key) {
-            case "taggedWith":
-                return `Tagged with ${value}`;
-            case "availability":
-                return value.map((val) => `Available on ${val}`).join(", ");
-            case "productType":
-                return value.join(", ");
-            default:
-                return value;
-        }
-    }
-
-    function isEmpty(value) {
-        if (Array.isArray(value)) {
-            return value.length === 0;
-        } else {
-            return value === "" || value == null;
-        }
-    }
 }
 
 export default PolarisFiltersDataTable;

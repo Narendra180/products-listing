@@ -1,12 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import CustomDropDown from '../components/custom-drop-down/custom-drop-down';
-import ProductsTable from '../components/products-table/products-table';
+import PolarisTabs from '../components/polaris-tabs/polaris-tabs';
 import { optionsArray } from '../components/custom-drop-down/options-data';
 import { Button } from "@shopify/polaris";
+import { getProductsArrayInRequiredFormat } from '../utils/home.utils';
+import { filterProductsBasedOnTabsState } from '../components/polaris-tabs/polaris-tabs.utils';
 import styles from '../styles/Home.module.scss';
 
 function Home() {
+	const [state,setState] = useState({
+		productsArrayFromApi: [],
+		selectedTabIndex: 0,
+		filteredProductsArray: []
+	});
+
+	const getProducts = async () => {
+		const response = await fetch("https://fakestoreapi.com/products");
+		let products = await response.json();
+		products = getProductsArrayInRequiredFormat(products);
+		setState((prevState) => {
+			return {...prevState, productsArrayFromApi: products, filteredProductsArray: [...products]}
+		});
+	}
+
+	const handleTabChange = (selectedTabIndex) => {
+		const filteredProductsArray = filterProductsBasedOnTabsState(selectedTabIndex,state.productsArrayFromApi);
+		setState((prevState) => {
+			return {...prevState, selectedTabIndex, filteredProductsArray}
+		});
+	}
+
+	useEffect(() => {
+		getProducts();
+	}, []);
+	
+
+	useEffect(() => {
+		console.log(state)
+	});
+	
 
 	return (
 		<div className={styles["home-container"]}>
@@ -44,8 +77,10 @@ function Home() {
 				</div>
 
 				<div className='products-table-container'>
-					<ProductsTable 
-					
+					<PolarisTabs 
+						selectedTabIndex={state.selectedTabIndex}
+						onSelect={handleTabChange}
+						productsArray={state.filteredProductsArray}
 					/>
 				</div>
 			</div>

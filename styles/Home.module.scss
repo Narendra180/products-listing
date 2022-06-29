@@ -1,0 +1,55 @@
+.home-container {
+	display: flex;
+	justify-content: center;
+	min-height: 100vh;
+	background-color: #efefef;
+	padding: 1px;
+	
+	.home-content-wrapper {
+		width: 75%;
+		.header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 1px 1px 13px 1px;
+			margin: 20px 0;
+			margin-top: 30px;
+			overflow: auto;
+
+			h1 {
+				font-size: 1.5rem;
+				font-weight: 600;
+				margin: 0 20px 0 0;
+			}
+
+			ul {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				display: flex;
+				align-items: center;
+
+				.export-import-btn {
+					font-size: 0.9rem;
+					font-weight: 500;
+					border: 0;
+					padding: 7px 16px;
+
+					&:hover {
+						cursor: pointer;
+					}
+				}					
+			}
+		}
+
+
+		@media screen and (max-width: 800px) { 
+			& {
+				width: 97%;
+			}
+		}
+	}
+	
+}
+
+
